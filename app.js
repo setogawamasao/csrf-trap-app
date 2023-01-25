@@ -3,7 +3,10 @@ const session = require("express-session");
 const app = express();
 const port = 3001;
 
+// htmlテンプレートエンジンを設定
 app.set("view engine", "ejs");
+
+// sessionの設定
 app.use(
   session({
     secret: "secret_key",
@@ -11,24 +14,30 @@ app.use(
     saveUninitialized: false,
   })
 );
+// requestのbodyから値を取得する設定
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
-  // req.sessionにセッションの値が保存されるされる
-  // 値が存在しない場合は、初期値を与える
-  // if (!req.session.views) {
-  //   req.session.views = 0;
-  // }
-  // カウントアップ
-  // req.session.views++;
-  // // アクセス回数を表示
-  // res.send("Hello World! Count:" + req.session.views);
+  const userId = "yamada";
+  // セッションにユーザーIDを格納
+  req.session.userId = userId;
   var data = {};
-  data.user = {};
-  data.user.name = "万丈";
-  // レンダリングを行う
+  data.userId = userId;
   res.render("./index.ejs", data);
 });
 
+app.get("/change", (req, res) => {
+  res.render("./change.ejs");
+});
+
+app.post("/submit", (req, res) => {
+  var data = {};
+  data.userId = req.session.userId;
+  data.password = req.body.pwd;
+  res.render("./result.ejs", data);
+});
+
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`danger app listening at http://localhost:${port}`);
 });
