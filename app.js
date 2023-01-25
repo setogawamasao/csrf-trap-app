@@ -1,36 +1,34 @@
 const express = require("express");
 const session = require("express-session");
-const bodyParser = require("body-parser");
-const csrf = require("csurf");
 const app = express();
+const port = 3001;
 
-const sess = {
-  secret: "key12345",
-  cookie: { maxAge: 60000 },
-  resave: false,
-  saveUninitialized: true,
-};
+app.set("view engine", "ejs");
+app.use(
+  session({
+    secret: "secret_key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
-if (app.get("env") === "production") {
-  app.set("trust proxy", 1);
-  sess.cookie.secure = true;
-}
-
-const csrfProtection = csrf({ cookie: false });
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session(sess));
-
-app.set("view engine", "pug");
-
-app.get("/", csrfProtection, (req, res) => {
-  res.render("index", { csrfToken: req.csrfToken() });
+app.get("/", (req, res) => {
+  // req.sessionにセッションの値が保存されるされる
+  // 値が存在しない場合は、初期値を与える
+  // if (!req.session.views) {
+  //   req.session.views = 0;
+  // }
+  // カウントアップ
+  // req.session.views++;
+  // // アクセス回数を表示
+  // res.send("Hello World! Count:" + req.session.views);
+  var data = {};
+  data.user = {};
+  data.user.name = "万丈";
+  // レンダリングを行う
+  res.render("./index.ejs", data);
 });
 
-app.post("/", csrfProtection, (req, res) => {
-  res.send(req.body.text);
-});
-
-app.listen("3000", () => {
-  console.log("Application started");
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
 });
