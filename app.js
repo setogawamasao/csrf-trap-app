@@ -10,5 +10,5 @@ app.get("/change-trap", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`danger app listening at http://localhost:${port}`);
+  console.log(`trap app listening at http://trap.com:${port}/change-trap`);
 });
